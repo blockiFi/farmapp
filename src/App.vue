@@ -120,22 +120,25 @@
                                           <div class="col-md-10" style="box-shadow: 1px 3px #888888;">
                                            
                                               <div class="row" >
-                                                  <div class="col-md-3">
+                                                  <div class="col-md-2">
                                                     <input type="number" class="form-control" placeholder="BUSD" id="busd-value">
                                                   <p>Busd Balance : <span id="busd-balance"></span></p>
                                                   <h6 style="color: blue; text-align: center;cursor: pointer;" @click="setMaxBusd()">MAX</h6>
                                                   </div>
-                                                  <div class="col-md-3">
+                                                  <div class="col-md-2">
                                                     <input type="number" class="form-control" placeholder="BNB/WBNB" id="bnb-value" readonly>
                                                     <p>BNB/WBNB Balance : <span id="bnb-balance"></span> / <span id="wbnb-balance"></span></p>
                                                   </div>
-                                                  <div class="col-md-3">
+                                                  <div class="col-md-2">
                                                     <input type="number" class="form-control" placeholder="Min LP" id="minLp-value" readonly>
                                                   </div>
-                                                  <div class="col-md-3">
+                                                  <div class="col-md-6">
                                                       <p><button class="btn btn-warning mr-2 mb-1" @click="getQuote">quote</button></p>
-                                                      <p><button class="btn btn-success mb-1">deposit BNB</button></p>
-                                                      <p><button class="btn btn-success mb-1" @click="depositWBNB()">deposit WBNB</button></p>
+                                                      <p>Approvals</p>
+                                                      <p><button class="btn btn-warning mb-1 mr-1" @click="approveBusd()">Approve BUSD</button><button class="btn btn-warning mb-1" @click="approveWbnb()">Approve WBNB</button></p>
+                                                      <p>Deposit </p>
+                                                      <p><button class="btn btn-success mb-1  mr-1" @click="depositBNB()">deposit BNB</button><button class="btn btn-success mb-1" @click="depositWBNB()">deposit WBNB</button></p>
+                                                    
                                                       </div>
                                               </div>
                                           </div>
@@ -355,20 +358,15 @@ async depositBNB(){
   }
   try {
     const web3 = new Web3(provider);
-    let busdContract   =  await new web3.eth.Contract( busdAbi ,busdAddress);
-    await busdContract.methods.approve(tokenAddress , web3.utils.toWei(document.querySelector("#busd-value").value ) ).send({from : selectedAccount});
- 
-   
-   
-
+    
     let tokenContract   =  await new web3.eth.Contract( tokenAbi ,tokenAddress);
 
     let deposite = await tokenContract.methods.depositBNB(
       web3.utils.toWei(document.querySelector("#busd-value").value ) ,
       web3.utils.toWei(document.querySelector("#minLp-value").value ) 
 
-    ).call({from : selectedAccount , value : document.querySelector("#bnb-value").value });
-    console(deposite);
+    ).send({from : selectedAccount , value : web3.utils.toWei(document.querySelector("#bnb-value").value ) });
+    console.log(deposite);
     this.fetchAccountData();
   }catch(error){
     alert("transaction reverted");
@@ -376,7 +374,24 @@ async depositBNB(){
   }
 
 },
-async depositWBNB(){
+async approveWbnb(){
+  if(document.querySelector("#busd-value").value == '' || document.querySelector("#busd-value").value == 0 || document.querySelector("#bnb-value").value == '' || document.querySelector("#bnb-value").value == 0 || document.querySelector("#bnb-value").value == '' || document.querySelector("#bnb-value").value == 0){
+    alert("Enter Busd Value and get Quote");
+    return;
+  }
+  try {
+    const web3 = new Web3(provider);
+    let wbnbContract   =  await new web3.eth.Contract( wbnbAbi ,wbnbAddress);
+    await wbnbContract.methods.approve(tokenAddress ,web3.utils.toWei(document.querySelector("#bnb-value").value )).send({from : selectedAccount});
+  
+   alert("Wbnb approved");
+  
+  }catch(error){
+  console.log(error);
+  }
+
+  },
+async approveBusd(){
   if(document.querySelector("#busd-value").value == '' || document.querySelector("#busd-value").value == 0 || document.querySelector("#bnb-value").value == '' || document.querySelector("#bnb-value").value == 0 || document.querySelector("#bnb-value").value == '' || document.querySelector("#bnb-value").value == 0){
     alert("Enter Busd Value and get Quote");
     return;
@@ -385,12 +400,21 @@ async depositWBNB(){
     const web3 = new Web3(provider);
     let busdContract   =  await new web3.eth.Contract( busdAbi ,busdAddress);
     await busdContract.methods.approve(tokenAddress , web3.utils.toWei(document.querySelector("#busd-value").value ) ).send({from : selectedAccount});
- 
-    let wbnbContract   =  await new web3.eth.Contract( wbnbAbi ,wbnbAddress);
-    await wbnbContract.methods.approve(tokenAddress ,web3.utils.toWei(document.querySelector("#bnb-value").value )).send({from : selectedAccount});
+   alert("busd approved");
   
-   
+  }catch(error){
+  console.log(error);
+  }
 
+  },
+async depositWBNB(){
+  if(document.querySelector("#busd-value").value == '' || document.querySelector("#busd-value").value == 0 || document.querySelector("#bnb-value").value == '' || document.querySelector("#bnb-value").value == 0 || document.querySelector("#bnb-value").value == '' || document.querySelector("#bnb-value").value == 0){
+    alert("Enter Busd Value and get Quote");
+    return;
+  }
+  try {
+    const web3 = new Web3(provider);
+    
     let tokenContract   =  await new web3.eth.Contract( tokenAbi ,tokenAddress);
 
     let deposite = await tokenContract.methods.deposit(
@@ -398,7 +422,7 @@ async depositWBNB(){
       web3.utils.toWei(document.querySelector("#bnb-value").value ) ,
       web3.utils.toWei(document.querySelector("#minLp-value").value ) 
 
-    ).call({from : selectedAccount});
+    ).send({from : selectedAccount , value : web3.utils.toWei(document.querySelector("#bnb-value").value ) });
     console(deposite);
     this.fetchAccountData();
   }catch(error){
@@ -488,22 +512,22 @@ console.log(selectedAccount)
   let busdContract   =  await new web3.eth.Contract( busdAbi ,busdAddress);
   let busbBalance = await busdContract.methods.balanceOf(accounts[0]).call();
   console.log(busbBalance);
-  document.querySelector("#busd-balance").textContent = web3.utils.fromWei(busbBalance, "ether");
+  document.querySelector("#busd-balance").textContent =parseFloat(web3.utils.fromWei(busbBalance, "ether") ).toFixed(4); 
   let wbnbContract   =  await new web3.eth.Contract( wbnbAbi ,wbnbAddress);
   let wbnbBalance = await wbnbContract.methods.balanceOf(accounts[0]).call();
   console.log(wbnbBalance);
-  document.querySelector("#wbnb-balance").textContent = web3.utils.fromWei(wbnbBalance, "ether");
+  document.querySelector("#wbnb-balance").textContent = parseFloat(web3.utils.fromWei(wbnbBalance, "ether")).toFixed(4);
 
   let tokenContract   =  await new web3.eth.Contract( tokenAbi ,tokenAddress);
   let totalLp = await tokenContract.methods.totalLPStaked().call();
   let lpBalance =await tokenContract.methods.users(accounts[0]).call();
   
-  document.querySelector("#totalLp").textContent = web3.utils.fromWei(totalLp, "ether");
-  document.querySelector("#lpBalance").textContent = web3.utils.fromWei(lpBalance[0], "ether");
-  document.querySelector("#busd-deposited").textContent =web3.utils.fromWei(lpBalance[1][0], "ether");
-  document.querySelector("#busd-withdrawn").textContent = web3.utils.fromWei(lpBalance[1][1], "ether");
-  document.querySelector("#wbnb-deposited").textContent = web3.utils.fromWei(lpBalance[2][0], "ether");
-  document.querySelector("#wbnb-withdrawn").textContent = web3.utils.fromWei(lpBalance[2][1], "ether");
+  document.querySelector("#totalLp").textContent = parseFloat(web3.utils.fromWei(totalLp, "ether")).toFixed(4);
+  document.querySelector("#lpBalance").textContent = parseFloat(web3.utils.fromWei(lpBalance[0], "ether")).toFixed(4);
+  document.querySelector("#busd-deposited").textContent =parseFloat(web3.utils.fromWei(lpBalance[1][0], "ether")).toFixed(4);
+  document.querySelector("#busd-withdrawn").textContent = parseFloat(web3.utils.fromWei(lpBalance[1][1], "ether")).toFixed(4);
+  document.querySelector("#wbnb-deposited").textContent = parseFloat(web3.utils.fromWei(lpBalance[2][0], "ether")).toFixed(4);
+  document.querySelector("#wbnb-withdrawn").textContent = parseFloat(web3.utils.fromWei(lpBalance[2][1], "ether")).toFixed(4);
 
   // Display fully loaded UI for wallet data
   // document.querySelector("#prepare").style.display = "none";
