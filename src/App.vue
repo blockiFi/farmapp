@@ -64,16 +64,22 @@
                                           </div>
                                           <div class="single_quick_activity">
                                             <div class="row">
-                                              <div class="col-md-8">
-                                                <input type="number" class="form-control" placeholder="BUSD Value" id="withdraw-busd-value">
+                                              <div class="col-md-6">
+                                                <input type="number" class="form-control" placeholder="LP Value" id="withdraw-busd-value">
+                                              </div>
+                                              <div class="col-md-2">
+                                                <h6 style="color: blue; text-align: center;cursor: pointer;" @click="setMaxWithdraw1()">MAX</h6>
                                               </div>
                                               <div class="col-md-4">
                                                 <button class="btn btn-warning btn-sm mb-1" @click="withdraw()">Withdraw BUSD</button>
                                               </div>
                                             </div>
                                             <div class="row">
-                                              <div class="col-md-8">
-                                                <input type="number" class="form-control" placeholder="BNB Value" id="withdraw-bnb-value">
+                                              <div class="col-md-6">
+                                                <input type="number" class="form-control" placeholder="LP Value" id="withdraw-bnb-value">
+                                              </div>
+                                              <div class="col-md-2">
+                                                <h6 style="color: blue; text-align: center;cursor: pointer;" @click="setMaxWithdraw2()">MAX</h6>
                                               </div>
                                               <div class="col-md-4">
                                                 <button class="btn btn-warning btn-sm mb-1" @click="withdrawBNB()"> Withdraw BNB</button>
@@ -133,11 +139,12 @@
                                                     <input type="number" class="form-control" placeholder="Min LP" id="minLp-value" readonly>
                                                   </div>
                                                   <div class="col-md-6">
-                                                      <p><button class="btn btn-warning mr-2 mb-1" @click="getQuote">quote</button></p>
+                                                      <!-- <p><button class="btn btn-warning mr-2 mb-1" @click="getQuote">quote</button></p> -->
                                                       <p>Approvals</p>
                                                       <p><button class="btn btn-warning mb-1 mr-1" @click="approveBusd()">Approve BUSD</button><button class="btn btn-warning mb-1" @click="approveWbnb()">Approve WBNB</button></p>
                                                       <p>Deposit </p>
-                                                      <p><button class="btn btn-success mb-1  mr-1" @click="depositBNB()">deposit BNB</button><button class="btn btn-success mb-1" @click="depositWBNB()">deposit WBNB</button></p>
+                                                      <p><button class="btn btn-success mb-1  mr-1" @click="depositBNB()" id="deposit-bnb" style="display: none;">deposit BNB</button>
+                                                        <button class="btn btn-success mb-1" @click="depositWBNB()" id="deposit-wbnb"  style="display: none;">deposit WBNB</button></p>
                                                     
                                                       </div>
                                               </div>
@@ -310,6 +317,12 @@ async  onDisconnect() {
 setMaxBusd(){
   document.querySelector("#busd-value").value = document.querySelector("#busd-balance").textContent;
 },
+setMaxWithdraw1(){
+  document.querySelector("#withdraw-busd-value").value = parseFloat(document.querySelector("#lpBalance").textContent) * 0.99;
+},
+setMaxWithdraw2(){
+  document.querySelector("#withdraw-bnb-value").value = parseFloat(document.querySelector("#lpBalance").textContent) * 0.99;
+},
 async withdraw(){
   if(document.querySelector("#withdraw-busd-value").value == '' || document.querySelector("#withdraw-busd-value").value == 0){
     alert("Enter a Value Withdrawal Busd Value");
@@ -383,7 +396,7 @@ async approveWbnb(){
     const web3 = new Web3(provider);
     let wbnbContract   =  await new web3.eth.Contract( wbnbAbi ,wbnbAddress);
     await wbnbContract.methods.approve(tokenAddress ,web3.utils.toWei(document.querySelector("#bnb-value").value )).send({from : selectedAccount});
-  
+    document.querySelector("#deposit-Wbnb").style.display = "block";
    alert("Wbnb approved");
   
   }catch(error){
@@ -392,7 +405,8 @@ async approveWbnb(){
 
   },
 async approveBusd(){
-  if(document.querySelector("#busd-value").value == '' || document.querySelector("#busd-value").value == 0 || document.querySelector("#bnb-value").value == '' || document.querySelector("#bnb-value").value == 0 || document.querySelector("#bnb-value").value == '' || document.querySelector("#bnb-value").value == 0){
+  this.getQuote();
+  if(document.querySelector("#busd-value").value == '' || document.querySelector("#busd-value").value == 0 ){
     alert("Enter Busd Value and get Quote");
     return;
   }
@@ -400,7 +414,8 @@ async approveBusd(){
     const web3 = new Web3(provider);
     let busdContract   =  await new web3.eth.Contract( busdAbi ,busdAddress);
     await busdContract.methods.approve(tokenAddress , web3.utils.toWei(document.querySelector("#busd-value").value ) ).send({from : selectedAccount});
-   alert("busd approved");
+    document.querySelector("#deposit-bnb").style.display = "block";
+    alert("busd approved");
   
   }catch(error){
   console.log(error);
