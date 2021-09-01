@@ -1,212 +1,24 @@
-<template>
-  <div id="app">
-    
-    <section class="main_content dashboard_part">
-        <!-- menu  -->
-        <div class="container-fluid no-gutters">
-            <div class="row">
-                <div class="col-lg-12 p-0">
-                    <div class="header_iner d-flex justify-content-between align-items-center">
-                        <div class="sidebar_icon d-lg-none">
-                            <i class="ti-menu"></i>
-                        </div>
-                        <div class="serach_field-area">
-                                <div class="search_inner">
-                                    <form action="#">
-                                        <div class="search_field">
-                                            <h4 style="color: green ; padding-left:40px"> Farm</h4>
-                                        </div>
-                                        
-                                    </form>
-                                </div>
-                            </div>
-                        <div class="header_right d-flex justify-content-between align-items-center">
-                            <div class="profile_info" id="btn-connect">
-                                <button class="btn btn-success" @click="onConnect()">Connect Wallet</button>
-                               
-                            </div>
-                            <div class="profile_info" id="btn-disconnect" style="display:none">
-                                <button class="btn btn-success"  id="account"></button>
-                                <div class="profile_info_iner">
-                                   
-                                    <div class="profile_info_details">
-                                        
-                                        <a  @click="onDisconnect()">Log Out <i class="ti-shift-left"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-10 offset-1"  id="not-connected">
-                  <h6 class="alert alert-warning">Please connect your wallet</h6>
-                </div>
-                <div class="col-md-10 offset-1"  id="wrong-network" style="display: none;">
-                  <h6 class="alert alert-danger">Please connect to BSC Mainnet</h6>
-                </div>
-            </div>
-        </div>
-        <div class="main_content_iner " id="connected" style="display: none;">
-          <div class="container-fluid plr_30 body_white_bg pt_30">
-              <div class="row justify-content-center">
-           
-            
-                 <div class="col-lg-12">
-                      <div class="single_element">
-                          <div class="quick_activity">
-                              <div class="row">
-                                  <div class="col-12">
-                                      <div class="quick_activity_wrap">
-                                          <div class="single_quick_activity">
-                                              <h4></h4>
-                                              <h3><span class="" id="totalLp"></span> </h3>
-                                              <p>Total Stacked Value</p>
-                                          </div>
-                                          <div class="single_quick_activity">
-                                            <!-- <div class="row">
-                                              <div class="col-md-6">
-                                                <input type="number" class="form-control" placeholder="LP Value" id="withdraw-busd-value">
-                                              </div>
-                                              <div class="col-md-2">
-                                                <h6 style="color: blue; text-align: center;cursor: pointer;" @click="setMaxWithdraw1()">MAX</h6>
-                                              </div>
-                                              <div class="col-md-4">
-                                                <button class="btn btn-warning btn-sm mb-1" @click="withdraw()">Withdraw BUSD</button>
-                                              </div>
-                                            </div> -->
-                                            <div class="row">
-                                              <div class="col-md-6">
-                                                <input type="number" class="form-control" placeholder="LP Value" id="withdraw-bnb-value">
-                                              </div>
-                                              <div class="col-md-2">
-                                                <h6 style="color: blue; text-align: center;cursor: pointer;" @click="setMaxWithdraw2()">MAX</h6>
-                                              </div>
-                                              <div class="col-md-4">
-                                                <button class="btn btn-warning btn-sm mb-1" @click="withdrawBNB()"> Withdraw BNB</button>
-                                              </div>
-                                            </div>
-                                          </div>
-                                          <div class="single_quick_activity">
-                                              <h3> <span class="">Stats</span> </h3>
-                                              <div class="row">
-                                                <div class="col-md-4">
-                                                  <h6 class="text-white">Asset</h6>
-                                                  <h6>BUSD : </h6>
-                                                  <h6>WBNB : </h6>
-                                                </div>
-                                                <div class="col-md-4">
-                                                  
-                                                  <h6 class="text-white">Deposited</h6>
-                                                  <h6 id="busd-deposited"></h6>
-                                                  <h6 id="wbnb-deposited"></h6>
-                                                </div>
-                                                <div class="col-md-4">
-                                                  <h6 class="text-white">Withdrawn</h6>
-                                                  <h6 id="busd-withdrawn"></h6>
-                                                  <h6 id="wbnb-withdrawn"></h6>
-                                                </div>
-                                              </div>
-                                          </div>
-                                          <div class="single_quick_activity">
-                                              <h3> <span class="" id="lpBalance"></span> </h3>
-                                              <p>LP Balance</p>
-                                          </div>
-                                      </div>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-                  <div class="col-12">
-                      <div class="row">
-                          <div class="col-sm-12 col-md-12 ">
-                              <div class="card" style="  box-shadow: 2px 6px #888888;">
-                                  <div class="card-body">
-                                      <div class="row">
-                                          <div class="col-md-10" style="box-shadow: 1px 3px #888888;">
-                                           
-                                              <div class="row" >
-                                                  <div class="col-md-2">
-                                                    <input type="number" class="form-control" placeholder="BUSD" id="busd-value">
-                                                  <p>Busd Balance : <span id="busd-balance"></span></p>
-                                                  <h6 style="color: blue; text-align: center;cursor: pointer;" @click="setMaxBusd()">MAX</h6>
-                                                  </div>
-                                                  <div class="col-md-2">
-                                                    <input type="number" class="form-control" placeholder="BNB/WBNB" id="bnb-value" readonly>
-                                                    <p>BNB/WBNB Balance : <span id="bnb-balance"></span> / <span id="wbnb-balance"></span></p>
-                                                  </div>
-                                                  <div class="col-md-2">
-                                                    <input type="number" class="form-control" placeholder="Min LP" id="minLp-value" readonly>
-                                                  </div>
-                                                  <div class="col-md-6">
-                                                      <!-- <p><button class="btn btn-warning mr-2 mb-1" @click="getQuote">quote</button></p> -->
-                                                      <p>Approvals</p>
-                                                      <p><button class="btn btn-warning mb-1 mr-1" @click="approveBusd()">Approve BUSD</button>
-                                                        <!-- <button class="btn btn-warning mb-1" @click="approveWbnb()">Approve WBNB</button> -->
-                                                      </p>
-                                                      <p>Deposit </p>
-                                                      <p><button class="btn btn-success mb-1  mr-1" @click="depositBNB()" id="deposit-bnb" style="display: none;">deposit BNB</button>
-                                                       
-                                                        <!-- <button class="btn btn-success mb-1" @click="depositWBNB()" id="deposit-wbnb"  style="display: none;">deposit WBNB</button>
-                                                        -->
-                                                      </p> 
-                                                    
-                                                      </div>
-                                              </div>
-                                          </div>
-                                          <div class="col-md-2" style="box-shadow: 1px 3px #888888;">
-                                              <div class="single_quick_activity">
-                                                  <div class="row">
-                                                      <!-- <div class="col-md-6">
-                                                          <h3> <span class="">0</span> </h3>
-                                                          <p>Reward Earned</p>
-                                                      </div> -->
-                                                      <div class="col-md-12">
-                                                        <button class="btn btn-success" @click="harvest()">harvest</button>
-                                                      </div>
-                                                  </div>
-                                                  
-                                              </div>
-                                          </div>
-                                      </div>
-                                  </div>
-                              </div>
-                          </div>
-                          </div>
-                      </div>
-                  </div>
-                  
-              
-                  
-              </div>
-          </div>
-        </section>
-  </div> 
-</template>
-
-<script>
 const Web3Modal = window.Web3Modal.default;
 const WalletConnectProvider = window.WalletConnectProvider.default;
 const Fortmatic = window.Fortmatic;
 const evmChains = window.evmChains;
 // Web3modal instance
+const tokenAbi =[{"inputs":[],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"amountCake","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"amountWBNB","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"amountSS","type":"uint256"}],"name":"CakeProcessed","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"from","type":"address"},{"indexed":false,"internalType":"uint256","name":"amountWBNB","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"amountUSD","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"amountLP","type":"uint256"}],"name":"Deposit","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"amountWBNB","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"amountUSD","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"amountLP","type":"uint256"}],"name":"Withdraw","type":"event"},{"inputs":[{"internalType":"uint256","name":"amountWBNB","type":"uint256"},{"internalType":"uint256","name":"amountBUSD","type":"uint256"},{"internalType":"uint256","name":"minLP","type":"uint256"}],"name":"deposit","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"amountBUSD","type":"uint256"},{"internalType":"uint256","name":"minLP","type":"uint256"}],"name":"depositBNB","outputs":[],"stateMutability":"payable","type":"function"},{"inputs":[],"name":"harvest","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"amountBUSD","type":"uint256"}],"name":"quote","outputs":[{"internalType":"uint256","name":"amountWBNB","type":"uint256"},{"internalType":"uint256","name":"expectedLP","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalLPStaked","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"users","outputs":[{"internalType":"uint256","name":"lp","type":"uint256"},{"components":[{"internalType":"uint256","name":"deposited","type":"uint256"},{"internalType":"uint256","name":"withdrawn","type":"uint256"}],"internalType":"struct Donations.Stats","name":"busd","type":"tuple"},{"components":[{"internalType":"uint256","name":"deposited","type":"uint256"},{"internalType":"uint256","name":"withdrawn","type":"uint256"}],"internalType":"struct Donations.Stats","name":"wbnb","type":"tuple"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"withdraw","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"withdrawBNB","outputs":[],"stateMutability":"nonpayable","type":"function"}]
+const wbnbAbi = [{"constant":true,"inputs":[],"name":"name","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"guy","type":"address"},{"name":"wad","type":"uint256"}],"name":"approve","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"src","type":"address"},{"name":"dst","type":"address"},{"name":"wad","type":"uint256"}],"name":"transferFrom","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"wad","type":"uint256"}],"name":"withdraw","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"decimals","outputs":[{"name":"","type":"uint8"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"balanceOf","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"symbol","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"dst","type":"address"},{"name":"wad","type":"uint256"}],"name":"transfer","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[],"name":"deposit","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"},{"name":"","type":"address"}],"name":"allowance","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"payable":true,"stateMutability":"payable","type":"fallback"},{"anonymous":false,"inputs":[{"indexed":true,"name":"src","type":"address"},{"indexed":true,"name":"guy","type":"address"},{"indexed":false,"name":"wad","type":"uint256"}],"name":"Approval","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"src","type":"address"},{"indexed":true,"name":"dst","type":"address"},{"indexed":false,"name":"wad","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"dst","type":"address"},{"indexed":false,"name":"wad","type":"uint256"}],"name":"Deposit","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"src","type":"address"},{"indexed":false,"name":"wad","type":"uint256"}],"name":"Withdrawal","type":"event"}]
+const busdAbi = [{"inputs":[],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"spender","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Approval","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Transfer","type":"event"},{"constant":true,"inputs":[],"name":"_decimals","outputs":[{"internalType":"uint8","name":"","type":"uint8"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"_name","outputs":[{"internalType":"string","name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"_symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"burn","outputs":[{"internalType":"bool","name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"decimals","outputs":[{"internalType":"uint8","name":"","type":"uint8"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"subtractedValue","type":"uint256"}],"name":"decreaseAllowance","outputs":[{"internalType":"bool","name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"getOwner","outputs":[{"internalType":"address","name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"addedValue","type":"uint256"}],"name":"increaseAllowance","outputs":[{"internalType":"bool","name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"mint","outputs":[{"internalType":"bool","name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"renounceOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"internalType":"address","name":"recipient","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"transfer","outputs":[{"internalType":"bool","name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"internalType":"address","name":"sender","type":"address"},{"internalType":"address","name":"recipient","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"transferFrom","outputs":[{"internalType":"bool","name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"internalType":"address","name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"}]
+const tokenAddress = "0xeb563Fd4B2E289ce27bd29b47b54275AB4c12beB"
+const wbnbAddress = "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c"
+const busdAddress = "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56"
 let web3Modal
-import  {tokenAbi ,wbnbAbi ,busdAbi, tokenAddress ,wbnbAddress, busdAddress} from "./abi"
-var Web3 = require('web3');
+// var Web3 = require('web3');
 // Chosen wallet provider given by the dialog window
 let provider;
 
 
 // Address of the selected account
 let selectedAccount;
-export default {
-  name: 'App',
-  
-  mounted(){
-    this.init();
-  },
-  methods: {
-    init() {
+
+   function init() {
       console.log("Initializing example");
         console.log("WalletConnectProvider is", WalletConnectProvider);
         console.log("Fortmatic is", Fortmatic);
@@ -244,8 +56,8 @@ export default {
         });
 
         console.log("Web3Modal instance is", web3Modal);
-    },
-    async onConnect() {
+    }
+    async function onConnect() {
 
   console.log("Opening a dialog", web3Modal);
   try {
@@ -262,24 +74,24 @@ export default {
   // Subscribe to accounts change
   provider.on("accountsChanged", (accounts) => {
     console.log(accounts);
-    this.fetchAccountData();
+   fetchAccountData();
   });
 
   // Subscribe to chainId change
   provider.on("chainChanged", (chainId) => {
     console.log(chainId);
-    this.fetchAccountData();
+   fetchAccountData();
   });
 
   // Subscribe to networkId change
   provider.on("networkChanged", (networkId) => {
     console.log(networkId);
-    this.fetchAccountData();
+   fetchAccountData();
   });
 
-  await this.refreshAccountData();
-},
-async  refreshAccountData() {
+  await refreshAccountData();
+}
+async function  refreshAccountData() {
 
   // If any current data is displayed when
   // the user is switching acounts in the wallet
@@ -292,10 +104,10 @@ async  refreshAccountData() {
   // with Ethereum node via JSON-RPC and loads chain data
   // over an API call.
   // document.querySelector("#btn-connect").setAttribute("disabled", "disabled")
-  await this.fetchAccountData(provider);
+  await fetchAccountData(provider);
   // document.querySelector("#btn-connect").removeAttribute("disabled")
-},
-async  onDisconnect() {
+}
+async function onDisconnect() {
 
   console.log("Killing the wallet connection", provider);
 
@@ -318,17 +130,17 @@ async  onDisconnect() {
      document.querySelector("#connected").style.display = "none";
      document.querySelector("#not-connected").style.display = "block";
      document.querySelector("#wrong-network").style.display = "none";
-},
-setMaxBusd(){
+}
+function setMaxBusd(){
   document.querySelector("#busd-value").value = document.querySelector("#busd-balance").textContent;
-},
-setMaxWithdraw1(){
+}
+function setMaxWithdraw1(){
   document.querySelector("#withdraw-busd-value").value = parseFloat(document.querySelector("#lpBalance").textContent) * 0.99;
-},
-setMaxWithdraw2(){
+}
+function setMaxWithdraw2(){
   document.querySelector("#withdraw-bnb-value").value = parseFloat(document.querySelector("#lpBalance").textContent) * 0.99;
-},
-async withdraw(){
+}
+async function withdraw(){
   if(document.querySelector("#withdraw-busd-value").value == '' || document.querySelector("#withdraw-busd-value").value == 0){
     alert("Enter a Value Withdrawal Busd Value");
     return;
@@ -342,8 +154,8 @@ async withdraw(){
       console.log(error);
       alert("Transaction Reverted");
     }
-},
-async withdrawBNB(){
+}
+async function withdrawBNB(){
   if(document.querySelector("#withdraw-bnb-value").value == '' || document.querySelector("#withdraw-bnb-value").value == 0){
     alert("Enter a Value Withdrawal Busd Value");
     return;
@@ -357,8 +169,8 @@ async withdrawBNB(){
       console.log(error);
       alert("Transaction Reverted");
     }
-},
-async harvest(){
+}
+async function harvest(){
   const web3 = new Web3(provider);
     try{
       let tokenContract   =  await new web3.eth.Contract( tokenAbi ,tokenAddress);
@@ -368,8 +180,8 @@ async harvest(){
       console.log(error);
       alert("Transaction Reverted");
     }
-},
-async depositBNB(){
+}
+async function depositBNB(){
   if(document.querySelector("#busd-value").value == '' || document.querySelector("#busd-value").value == 0 || document.querySelector("#bnb-value").value == '' || document.querySelector("#bnb-value").value == 0 || document.querySelector("#bnb-value").value == '' || document.querySelector("#bnb-value").value == 0){
     alert("Enter Busd Value and get Quote");
     return;
@@ -385,14 +197,14 @@ async depositBNB(){
 
     ).send({from : selectedAccount , value : web3.utils.toWei(document.querySelector("#bnb-value").value ) });
     console.log(deposite);
-    this.fetchAccountData();
+   fetchAccountData();
   }catch(error){
     alert("transaction reverted");
     console.log(error);
   }
 
-},
-async approveWbnb(){
+}
+async function approveWbnb(){
   if(document.querySelector("#busd-value").value == '' || document.querySelector("#busd-value").value == 0 || document.querySelector("#bnb-value").value == '' || document.querySelector("#bnb-value").value == 0 || document.querySelector("#bnb-value").value == '' || document.querySelector("#bnb-value").value == 0){
     alert("Enter Busd Value and get Quote");
     return;
@@ -408,9 +220,9 @@ async approveWbnb(){
   console.log(error);
   }
 
-  },
-async approveBusd(){
-  this.getQuote();
+  }
+async function approveBusd(){
+ getQuote();
   if(document.querySelector("#busd-value").value == '' || document.querySelector("#busd-value").value == 0 ){
     alert("Enter Busd Value and get Quote");
     return;
@@ -426,8 +238,8 @@ async approveBusd(){
   console.log(error);
   }
 
-  },
-async depositWBNB(){
+  }
+async function depositWBNB(){
   if(document.querySelector("#busd-value").value == '' || document.querySelector("#busd-value").value == 0 || document.querySelector("#bnb-value").value == '' || document.querySelector("#bnb-value").value == 0 || document.querySelector("#bnb-value").value == '' || document.querySelector("#bnb-value").value == 0){
     alert("Enter Busd Value and get Quote");
     return;
@@ -444,14 +256,14 @@ async depositWBNB(){
 
     ).send({from : selectedAccount , value : web3.utils.toWei(document.querySelector("#bnb-value").value ) });
     console(deposite);
-    this.fetchAccountData();
+   fetchAccountData();
   }catch(error){
     alert("transaction reverted");
     console.log(error);
   }
 
-},
-async  getQuote() {
+}
+async function getQuote() {
   console.log(document.querySelector("#busd-value").value);
   if(document.querySelector("#busd-value").value == ''){
     alert("Enter Busd Value");
@@ -464,8 +276,8 @@ async  getQuote() {
   document.querySelector("#minLp-value").value  = web3.utils.fromWei(quote[1])*0.95;
 console.log(quote[0]);
 console.log(quote[1]);
-},
-async  fetchAccountData() {
+}
+async  function fetchAccountData() {
 
   // Get a Web3 instance for the wallet
   const web3 = new Web3(provider);
@@ -553,12 +365,8 @@ console.log(selectedAccount)
   // document.querySelector("#prepare").style.display = "none";
   // document.querySelector("#connected").style.display = "block";
 }
-  }
-}
-</script>
-
-<style >
-  .text-white{
-    color:white;
-  }
-</style>
+window.addEventListener('load', async () => {
+  init();
+  document.querySelector("#btn-connect").addEventListener("click", onConnect);
+  document.querySelector("#btn-disconnect").addEventListener("click", onDisconnect);
+});
